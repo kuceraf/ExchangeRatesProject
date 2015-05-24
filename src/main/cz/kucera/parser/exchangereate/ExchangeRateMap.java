@@ -9,7 +9,7 @@ import java.util.Map;
  */
 
 public class ExchangeRateMap {
-
+    //datum, kod meny, kurz vuci euru
     Map<Date, Map<String, BigDecimal>> rates;
 
     ExchangeRateMap(Map<Date, Map<String, BigDecimal>> rates) {

@@ -9,7 +9,7 @@ import java.io.Serializable;
  */
 @ManagedBean
 @SessionScoped
-public class HelloBean implements Serializable {
+public class IndexBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
