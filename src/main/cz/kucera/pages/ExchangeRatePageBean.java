@@ -11,6 +11,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.DateFormat;
 import java.util.*;
 
 /**
@@ -21,10 +22,13 @@ public class ExchangeRatePageBean implements Serializable {
 
     @ManagedProperty(value = "#{exchangeRateParser}")
     ExchangeRateService exchangeRateService;
+    Date beginDate;
+    Date endDate;
 
     BigDecimal exchangeRate = new BigDecimal(9);
     private LineChartModel lineChartModel;
 
+    //TODO predelat jako factory method
    public String doLineChartModel() {
        ExchangeRateMap exchangeRateMap = exchangeRateService.getExchangeRatesAll();
        Set<Date> dates = exchangeRateMap.getRates().keySet();
@@ -36,16 +40,53 @@ public class ExchangeRatePageBean implements Serializable {
        lineChartModel.setTitle("Exchange rates - daily");
        series.setLabel("EUR to CZK");
 
-       for (Date date : orderedDates){
+       for (Date date : orderedDates) {
            //TODO pridat dalsi meny
-           BigDecimal exchangeRateCZK = exchangeRateMap.getRates().get(date).get("CZK");
-           series.set(date.toString(), exchangeRateCZK);
+           if (applyDateFilters(date)) {
+               BigDecimal exchangeRateCZK = exchangeRateMap.getRates().get(date).get("CZK");
+               series.set(DateFormat.getDateInstance().format(date), exchangeRateCZK);
+           }
        }
        lineChartModel.addSeries(series);
        lineChartModel.getAxes().put(AxisType.X, new CategoryAxis("Date"));
+       lineChartModel.getAxis(AxisType.X).setTickAngle(280);
        lineChartModel.getAxis(AxisType.Y).setLabel("Exchange rate");
        return "line-chart";
    }
+
+    //TODO predelat jako closure
+    private boolean applyDateFilters(Date date) {
+        boolean isAfterBeginDate = true;
+        boolean isBeforeEndDate = true;
+        if(beginDate != null) {
+            isAfterBeginDate = date.after(beginDate) || date.equals(beginDate);
+        }
+
+        if(endDate != null) {
+            isBeforeEndDate = date.before(endDate) || date.equals(endDate);
+        }
+
+        return isAfterBeginDate && isBeforeEndDate;
+    }
+
+    //getters, setters
+
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public Date getBeginDate() {
+        return beginDate;
+    }
+
+    public void setBeginDate(Date beginDate) {
+        this.beginDate = beginDate;
+    }
 
     public LineChartModel getLineChartModel() {
         return lineChartModel;

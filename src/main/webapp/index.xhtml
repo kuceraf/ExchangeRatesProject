@@ -3,6 +3,7 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
         >
 
 <h:head>
@@ -15,8 +16,19 @@
         <h:commandButton value="Show Exchange Rate" action="exchange-rate"></h:commandButton>
     </h:form>
     <br/>
+
+    <div>***************************************************************************************************************</div>
+    <br/>
     <h:form>
-        <h:commandButton value="View graph" action="#{exchangeRatePageBean.doLineChartModel}"></h:commandButton>
+        <h:panelGrid columns="2">
+            <p:outputLabel for="beginDate" value="Begin date:"/>
+            <p:calendar id="beginDate" value="#{exchangeRatePageBean.beginDate}" showOn="button"/>
+
+            <p:outputLabel for="beginDate" value="End date:"/>
+            <p:calendar id="endDate" value="#{exchangeRatePageBean.endDate}" showOn="button"/>
+
+            <h:commandButton value="View graph" action="#{exchangeRatePageBean.doLineChartModel}"/>
+        </h:panelGrid>
     </h:form>
 </h:body>
 </html>
